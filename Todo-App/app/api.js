@@ -1,6 +1,6 @@
 export const submitFormData = async (formData) => {
     try {
-      const response = await fetch('http://127.0.0.1:8080/api/submit-form', {
+      const response = await fetch('https://form-jd30.onrender.com/api/submit-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
