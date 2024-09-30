@@ -16,12 +16,45 @@ const getFormData = async (req, res) => {
 
     console.log('Form data retrieved:', forms);
 
-    // Start building the HTML response
+    // Start building the HTML response with dark theme and green font
     let html = `
       <!DOCTYPE html>
       <html lang="en">
       <head>
-        <!-- ... styles ... -->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Submitted Form Data</title>
+        <style>
+          body {
+            background-color: #2c2c2c; /* Dark background */
+            color: #00ff00; /* Green font color */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+          }
+          h1 {
+            text-align: center;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+          }
+          th, td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: left;
+          }
+          th {
+            background-color: #444; /* Darker header */
+          }
+          tr:nth-child(even) {
+            background-color: #333; /* Alternate row color */
+          }
+          tr:hover {
+            background-color: #555; /* Row hover color */
+          }
+        </style>
       </head>
       <body>
         <h1>Submitted Form Data</h1>
@@ -41,8 +74,6 @@ const getFormData = async (req, res) => {
               <th>Remarks</th>
               <th>Follow-up Required</th>
               <th>Location</th>
-              <!-- Remove Uploaded Document column -->
-              <!-- <th>Uploaded Document</th> -->
             </tr>
           </thead>
           <tbody>
@@ -65,8 +96,6 @@ const getFormData = async (req, res) => {
           <td>${form.remarks || ''}</td>
           <td>${form.followUpRequired}</td>
           <td>${form.location}</td>
-          <!-- Remove Uploaded Document cell -->
-          <!-- <td>${form.uploadedDocument ? `<a href="/uploads/${form.uploadedDocument}" target="_blank">View Document</a>` : 'No Document'}</td> -->
         </tr>`;
     });
 
