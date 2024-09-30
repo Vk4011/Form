@@ -1,3 +1,4 @@
+// controllers/getFormDataController.js
 const Form = require('../models/Form');
 
 // Controller to handle fetching form data and sending it in HTML format
@@ -20,46 +21,28 @@ const getFormData = async (req, res) => {
       <!DOCTYPE html>
       <html lang="en">
       <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Form Data</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: green;
-            margin: 20px;
-          }
-          table {
-            width: 100%;
-            border-collapse: collapse;
-          }
-          table, th, td {
-            border: 1px solid #ffffff;
-          }
-          th, td {
-            padding: 12px;
-            text-align: left;
-          }
-          th {
-            background-color: #1e1e1e;
-          }
-          tr:nth-child(even) {
-            background-color: #2e2e2e;
-          }
-        </style>
+        <!-- ... styles ... -->
       </head>
       <body>
         <h1>Submitted Form Data</h1>
         <table>
           <thead>
             <tr>
-              <th>Full Name</th>
+              <th>RM Name</th>
+              <th>Customer Full Name</th>
               <th>Email</th>
-              <th>Phone</th>
-              <th>Business</th>
-              <th>Turnover</th>
+              <th>Phone Number</th>
+              <th>Type of Income</th>
+              <th>Business Name</th>
+              <th>Business Turnover</th>
+              <th>Existing Loans</th>
+              <th>Loan Requirement</th>
+              <th>Type of Loan</th>
+              <th>Remarks</th>
+              <th>Follow-up Required</th>
               <th>Location</th>
+              <!-- Remove Uploaded Document column -->
+              <!-- <th>Uploaded Document</th> -->
             </tr>
           </thead>
           <tbody>
@@ -69,12 +52,21 @@ const getFormData = async (req, res) => {
     forms.forEach((form) => {
       html += `
         <tr>
-          <td>${form.fullname}</td>
+          <td>${form.rmName}</td>
+          <td>${form.customerFullName}</td>
           <td>${form.email}</td>
-          <td>${form.phone}</td>
-          <td>${form.business}</td>
-          <td>${form.turnover}</td>
+          <td>${form.phoneNumber}</td>
+          <td>${form.typeOfIncome}</td>
+          <td>${form.businessName || ''}</td>
+          <td>${form.businessTurnover || ''}</td>
+          <td>${form.existingLoans || ''}</td>
+          <td>${form.loanRequirement || ''}</td>
+          <td>${form.typeOfLoan}</td>
+          <td>${form.remarks || ''}</td>
+          <td>${form.followUpRequired}</td>
           <td>${form.location}</td>
+          <!-- Remove Uploaded Document cell -->
+          <!-- <td>${form.uploadedDocument ? `<a href="/uploads/${form.uploadedDocument}" target="_blank">View Document</a>` : 'No Document'}</td> -->
         </tr>`;
     });
 

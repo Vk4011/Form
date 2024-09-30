@@ -1,3 +1,5 @@
+// FormScreen.tsx
+
 import React, { useState } from 'react';
 import {
   Text,
@@ -11,9 +13,8 @@ import {
 import { MotiView, MotiText } from 'moti';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
-import { submitFormData } from './api';
+import { submitFormData } from './api'; // Corrected import statement
 import { Picker } from '@react-native-picker/picker';
-import * as DocumentPicker from 'expo-document-picker';
 
 export default function FormScreen() {
   // State Variables
@@ -30,49 +31,55 @@ export default function FormScreen() {
   const [otherLoanType, setOtherLoanType] = useState('');
   const [remarks, setRemarks] = useState('');
   const [followUpRequired, setFollowUpRequired] = useState('Yes');
-  const [uploadedDocument, setUploadedDocument] = useState(null);
   const [location, setLocation] = useState('');
 
   // Validation Functions
-  const validateEmail = (email) => {
+  const validateEmail = (email: string) => {
     const emailRegex = /\S+@\S+\.\S+/;
     return emailRegex.test(email);
   };
 
-  const validatePhoneNumber = (phone) => {
+  const validatePhoneNumber = (phone: string) => {
     const phoneRegex = /^\d{10}$/; // Adjust based on your requirements
     return phoneRegex.test(phone);
   };
 
   // Fetch Location
   const fetchLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permission Denied', 'Permission to access location was denied');
-      return;
-    }
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Denied', 'Permission to access location was denied');
+        return;
+      }
 
-    let locationData = await Location.getCurrentPositionAsync({});
-    const coords = `Lat: ${locationData.coords.latitude}, Long: ${locationData.coords.longitude}`;
-    setLocation(coords);
-    Alert.alert('Location Fetched', coords);
-  };
-
-  // Document Picker
-  const pickDocument = async () => {
-    let result = await DocumentPicker.getDocumentAsync({
-      type: ['image/*', 'application/pdf'],
-    });
-
-    if (result.type === 'success') {
-      setUploadedDocument(result);
-      Alert.alert('Document Selected', result.name);
+      let locationData = await Location.getCurrentPositionAsync({});
+      const coords = `Lat: ${locationData.coords.latitude}, Long: ${locationData.coords.longitude}`;
+      setLocation(coords);
+      Alert.alert('Location Fetched', coords);
+    } catch (error) {
+      console.error('Location Error:', error);
+      Alert.alert('Error', 'Failed to fetch location.');
     }
   };
 
   // Handle Form Submission
   const handleSubmit = async () => {
     // Validations
+    if (
+      !rmName ||
+      !customerFullName ||
+      !email ||
+      !phoneNumber ||
+      !typeOfIncome ||
+      !typeOfLoan ||
+      !followUpRequired ||
+      !location
+    ) {
+      Alert.alert('Error', 'Please fill all the required fields.');
+      return;
+    }
+
     if (!validateEmail(email)) {
       Alert.alert('Invalid Email', 'Please enter a valid email address.');
       return;
@@ -83,38 +90,48 @@ export default function FormScreen() {
       return;
     }
 
-    // Construct FormData
-    const formData = new FormData();
-    formData.append('rmName', rmName);
-    formData.append('customerFullName', customerFullName);
-    formData.append('email', email);
-    formData.append('phoneNumber', phoneNumber);
-    formData.append('typeOfIncome', typeOfIncome);
-    formData.append('businessName', businessName);
-    formData.append('businessTurnover', businessTurnover);
-    formData.append('existingLoans', existingLoans);
-    formData.append('loanRequirement', loanRequirement);
-    formData.append('typeOfLoan', typeOfLoan === 'Other' ? otherLoanType : typeOfLoan);
-    formData.append('remarks', remarks);
-    formData.append('followUpRequired', followUpRequired);
-    formData.append('location', location);
-
-    if (uploadedDocument) {
-      const uriParts = uploadedDocument.uri.split('.');
-      const fileType = uriParts[uriParts.length - 1];
-
-      formData.append('uploadedDocument', {
-        uri: uploadedDocument.uri,
-        name: uploadedDocument.name,
-        type: uploadedDocument.mimeType || `application/${fileType}`,
-      });
-    }
+    // Construct a plain JavaScript object
+    const formData = {
+      rmName,
+      customerFullName,
+      email,
+      phoneNumber,
+      typeOfIncome,
+      businessName,
+      businessTurnover,
+      existingLoans,
+      loanRequirement,
+      typeOfLoan: typeOfLoan === 'Other' ? otherLoanType : typeOfLoan,
+      remarks,
+      followUpRequired,
+      location,
+    };
 
     // Submit Form Data
     try {
+      // For debugging purposes, log individual form data
+      console.log('Submitting form data...');
+      console.log('Form Data:', formData);
+
       const data = await submitFormData(formData);
       Alert.alert('Success', 'Form submitted successfully');
-    } catch (error) {
+
+      // Reset form fields after submission
+      setRmName('');
+      setCustomerFullName('');
+      setEmail('');
+      setPhoneNumber('');
+      setTypeOfIncome('Business Name');
+      setBusinessName('');
+      setBusinessTurnover('');
+      setExistingLoans('');
+      setLoanRequirement('');
+      setTypeOfLoan('Personal Loan');
+      setOtherLoanType('');
+      setRemarks('');
+      setFollowUpRequired('Yes');
+      setLocation('');
+    } catch (error: any) {
       console.error('Network Error:', error);
       Alert.alert('Error', error.message || 'Unable to submit form');
     }
@@ -171,6 +188,7 @@ export default function FormScreen() {
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
+            autoCapitalize="none"
           />
         </View>
 
@@ -336,14 +354,6 @@ export default function FormScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Upload Documents */}
-        <TouchableOpacity style={styles.uploadButton} onPress={pickDocument}>
-          <Ionicons name="cloud-upload-outline" size={24} color="#1E90FF" />
-          <Text style={styles.uploadButtonText}>
-            {uploadedDocument ? uploadedDocument.name : 'Upload Document'}
-          </Text>
-        </TouchableOpacity>
-
         {/* Location Input */}
         <View style={styles.inputContainer}>
           <Ionicons name="location-outline" size={20} color="#1E90FF" />
@@ -410,7 +420,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 1,
     borderColor: '#1E90FF',
-    width: 330, // Updated width
+    width: 330,
   },
   input: {
     flex: 1,
@@ -439,7 +449,7 @@ const styles = StyleSheet.create({
     borderColor: '#1E90FF',
     marginBottom: 20,
     overflow: 'hidden',
-    width: 330, // Updated width
+    width: 330,
   },
   picker: {
     color: '#fff',
@@ -449,22 +459,6 @@ const styles = StyleSheet.create({
   locationButton: {
     marginLeft: 10,
   },
-  uploadButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#333',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#1E90FF',
-    width: 330, // Updated width
-  },
-  uploadButtonText: {
-    color: '#fff',
-    marginLeft: 10,
-  },
   submitButton: {
     marginTop: 30,
     paddingVertical: 15,
@@ -472,7 +466,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E90FF',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 330, // Updated width (optional)
+    width: 330,
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 5,

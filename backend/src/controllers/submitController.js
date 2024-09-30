@@ -1,23 +1,66 @@
+// controllers/submitController.js
 const Form = require('../models/Form');
 
-// Controller to handle form submissions
-const submitForm = async (req, res) => {
-  const { fullname, email, phone, business, turnover, location } = req.body;
+// Remove multer imports and configuration
+// const multer = require('multer');
+// const path = require('path');
 
-  // Basic validation to check if all fields are present
-  if (!fullname || !email || !phone || !business || !turnover || !location) {
-    return res.status(400).json({ error: 'All fields are required' });
+// Remove multer configuration
+// const storage = multer.diskStorage({...});
+// const fileFilter = (req, file, cb) => {...};
+// const upload = multer({ storage: storage, fileFilter: fileFilter });
+
+const submitForm = async (req, res) => {
+  const {
+    rmName,
+    customerFullName,
+    email,
+    phoneNumber,
+    typeOfIncome,
+    businessName,
+    businessTurnover,
+    existingLoans,
+    loanRequirement,
+    typeOfLoan,
+    otherLoanType,
+    remarks,
+    followUpRequired,
+    location,
+  } = req.body;
+
+  // Basic validation to check if required fields are present
+  if (
+    !rmName ||
+    !customerFullName ||
+    !email ||
+    !phoneNumber ||
+    !typeOfIncome ||
+    !typeOfLoan ||
+    !followUpRequired ||
+    !location
+  ) {
+    return res.status(400).json({ error: 'Required fields are missing' });
   }
 
   try {
     // Save the form data to the database
     const newForm = new Form({
-      fullname,
+      rmName,
+      customerFullName,
       email,
-      phone,
-      business,
-      turnover,
+      phoneNumber,
+      typeOfIncome,
+      businessName: businessName || null,
+      businessTurnover: businessTurnover || null,
+      existingLoans: existingLoans || null,
+      loanRequirement: loanRequirement || null,
+      typeOfLoan: typeOfLoan === 'Other' ? otherLoanType : typeOfLoan,
+      otherLoanType: typeOfLoan === 'Other' ? otherLoanType : null,
+      remarks: remarks || null,
+      followUpRequired,
       location,
+      // Remove the uploadedDocument field
+      // uploadedDocument: req.file ? req.file.filename : null,
     });
 
     await newForm.save();
@@ -27,4 +70,8 @@ const submitForm = async (req, res) => {
   }
 };
 
-module.exports = { submitForm };
+module.exports = {
+  // Remove the export of upload middleware
+  // upload,
+  submitForm,
+};
