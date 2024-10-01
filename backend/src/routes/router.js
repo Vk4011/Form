@@ -3,11 +3,13 @@ const express = require('express');
 const { submitForm } = require('../controllers/submitController');
 const { getFormData } = require('../controllers/getFormDataController');
 const { clearDatabase } = require('../controllers/clearDatabaseController');
+const { getData } = require('../controllers/getdata');
 const router = express.Router();
 
 router.post('/submit-form', submitForm);
 router.get('/data', getFormData);
 router.get('/clear', clearDatabase); 
+router.get("/getdata",getData) ;
 
 module.exports = router;
 

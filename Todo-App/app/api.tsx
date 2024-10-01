@@ -1,7 +1,7 @@
 // api.tsx
 export const submitFormData = async (formData: any) => {
   try {
-    const response = await fetch('http://192.168.231.129:4500/api/submit-form', {
+    const response = await fetch('https://form-jd30.onrender.com/api/submit-form', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
