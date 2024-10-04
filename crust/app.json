@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "RMDSR",
-    "slug": "RMDSR",
+    "slug": "rmdsr",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -35,8 +35,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "f95b9b63-7e85-41c1-becb-d03bea28b9da"
+        "projectId": "d7a099c1-214a-450e-9ee9-2dc51c72f8ad"
       }
-    }
+    },
+    "owner": "vk4011"
   }
 }
