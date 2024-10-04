@@ -22,7 +22,7 @@ export default function FormScreen() {
   const [customerFullName, setCustomerFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [typeOfIncome, setTypeOfIncome] = useState('Business Name');
+  const [typeOfIncome, setTypeOfIncome] = useState('Business');
   const [businessName, setBusinessName] = useState('');
   const [businessTurnover, setBusinessTurnover] = useState('');
   const [existingLoans, setExistingLoans] = useState('');
@@ -121,7 +121,7 @@ export default function FormScreen() {
       setCustomerFullName('');
       setEmail('');
       setPhoneNumber('');
-      setTypeOfIncome('Business Name');
+      setTypeOfIncome('Business');
       setBusinessName('');
       setBusinessTurnover('');
       setExistingLoans('');
@@ -210,14 +210,14 @@ export default function FormScreen() {
         <View style={styles.radioContainer}>
           <TouchableOpacity
             style={styles.radioButton}
-            onPress={() => setTypeOfIncome('Business Name')}
+            onPress={() => setTypeOfIncome('Business')}
           >
             <Ionicons
-              name={typeOfIncome === 'Business Name' ? 'radio-button-on' : 'radio-button-off'}
+              name={typeOfIncome === 'Business' ? 'radio-button-on' : 'radio-button-off'}
               size={20}
               color="#1E90FF"
             />
-            <Text style={styles.radioText}>Business Name</Text>
+            <Text style={styles.radioText}>Business</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.radioButton}
@@ -232,13 +232,13 @@ export default function FormScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Business Name */}
-        {typeOfIncome === 'Business Name' && (
+        {/* Business */}
+        {typeOfIncome === 'Business' && (
           <View style={styles.inputContainer}>
             <Ionicons name="briefcase-outline" size={20} color="#1E90FF" />
             <TextInput
               style={styles.input}
-              placeholder="Business Name"
+              placeholder="Business"
               placeholderTextColor="#999"
               value={businessName}
               onChangeText={setBusinessName}
@@ -246,12 +246,12 @@ export default function FormScreen() {
           </View>
         )}
 
-        {/* Business Turnover */}
+        {/* Income */}
         <View style={styles.inputContainer}>
           <Ionicons name="cash-outline" size={20} color="#1E90FF" />
           <TextInput
             style={styles.input}
-            placeholder="Business Turnover"
+            placeholder="Income"
             placeholderTextColor="#999"
             value={businessTurnover}
             onChangeText={setBusinessTurnover}
