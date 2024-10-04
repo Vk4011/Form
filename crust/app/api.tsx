@@ -1,7 +1,7 @@
 // api.tsx
 export const submitFormData = async (formData: any) => {
   try {
-    const response = await fetch('https://form-jd30.onrender.com/api/submit-form', {
+    const response = await fetch('https://crust-33g3.onrender.com/api/submit-form', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
