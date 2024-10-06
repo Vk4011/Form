@@ -1,6 +1,6 @@
 // FormScreen.tsx
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -9,29 +9,29 @@ import {
   Alert,
   StyleSheet,
   ScrollView,
-} from 'react-native';
-import { MotiView, MotiText } from 'moti';
-import { Ionicons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
-import { submitFormData } from './api'; // Corrected import statement
-import { Picker } from '@react-native-picker/picker';
+} from "react-native";
+import { MotiView, MotiText } from "moti";
+import { Ionicons } from "@expo/vector-icons";
+import * as Location from "expo-location";
+import { submitFormData } from "./api"; // Corrected import statement
+import { Picker } from "@react-native-picker/picker";
 
 export default function FormScreen() {
   // State Variables
-  const [rmName, setRmName] = useState('');
-  const [customerFullName, setCustomerFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [typeOfIncome, setTypeOfIncome] = useState('Business');
-  const [businessName, setBusinessName] = useState('');
-  const [businessTurnover, setBusinessTurnover] = useState('');
-  const [existingLoans, setExistingLoans] = useState('');
-  const [loanRequirement, setLoanRequirement] = useState('');
-  const [typeOfLoan, setTypeOfLoan] = useState('Personal Loan');
-  const [otherLoanType, setOtherLoanType] = useState('');
-  const [remarks, setRemarks] = useState('');
-  const [followUpRequired, setFollowUpRequired] = useState('Yes');
-  const [location, setLocation] = useState('');
+  const [rmName, setRmName] = useState("");
+  const [customerFullName, setCustomerFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [typeOfIncome, setTypeOfIncome] = useState("Business");
+  const [businessName, setBusinessName] = useState("");
+  const [businessTurnover, setBusinessTurnover] = useState("");
+  const [existingLoans, setExistingLoans] = useState("");
+  const [loanRequirement, setLoanRequirement] = useState("");
+  const [typeOfLoan, setTypeOfLoan] = useState("Personal Loan");
+  const [otherLoanType, setOtherLoanType] = useState("");
+  const [remarks, setRemarks] = useState("");
+  const [followUpRequired, setFollowUpRequired] = useState("Yes");
+  const [location, setLocation] = useState("");
 
   // Validation Functions
   const validateEmail = (email: string) => {
@@ -48,18 +48,21 @@ export default function FormScreen() {
   const fetchLocation = async () => {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission Denied', 'Permission to access location was denied');
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission Denied",
+          "Permission to access location was denied"
+        );
         return;
       }
 
       let locationData = await Location.getCurrentPositionAsync({});
       const coords = `Lat: ${locationData.coords.latitude}, Long: ${locationData.coords.longitude}`;
       setLocation(coords);
-      Alert.alert('Location Fetched', coords);
+      Alert.alert("Location Fetched", coords);
     } catch (error) {
-      console.error('Location Error:', error);
-      Alert.alert('Error', 'Failed to fetch location.');
+      console.error("Location Error:", error);
+      Alert.alert("Error", "Failed to fetch location.");
     }
   };
 
@@ -76,17 +79,20 @@ export default function FormScreen() {
       !followUpRequired ||
       !location
     ) {
-      Alert.alert('Error', 'Please fill all the required fields.');
+      Alert.alert("Error", "Please fill all the required fields.");
       return;
     }
 
     if (!validateEmail(email)) {
-      Alert.alert('Invalid Email', 'Please enter a valid email address.');
+      Alert.alert("Invalid Email", "Please enter a valid email address.");
       return;
     }
 
     if (!validatePhoneNumber(phoneNumber)) {
-      Alert.alert('Invalid Phone Number', 'Please enter a valid 10-digit phone number.');
+      Alert.alert(
+        "Invalid Phone Number",
+        "Please enter a valid 10-digit phone number."
+      );
       return;
     }
 
@@ -97,11 +103,11 @@ export default function FormScreen() {
       email,
       phoneNumber,
       typeOfIncome,
-      businessName,
-      businessTurnover,
+      business,
+      income,
       existingLoans,
       loanRequirement,
-      typeOfLoan: typeOfLoan === 'Other' ? otherLoanType : typeOfLoan,
+      typeOfLoan: typeOfLoan === "Other" ? otherLoanType : typeOfLoan,
       remarks,
       followUpRequired,
       location,
@@ -110,30 +116,30 @@ export default function FormScreen() {
     // Submit Form Data
     try {
       // For debugging purposes, log individual form data
-      console.log('Submitting form data...');
-      console.log('Form Data:', formData);
+      console.log("Submitting form data...");
+      console.log("Form Data:", formData);
 
       const data = await submitFormData(formData);
-      Alert.alert('Success', 'Form submitted successfully');
+      Alert.alert("Success", "Form submitted successfully");
 
       // Reset form fields after submission
-      setRmName('');
-      setCustomerFullName('');
-      setEmail('');
-      setPhoneNumber('');
-      setTypeOfIncome('Business');
-      setBusinessName('');
-      setBusinessTurnover('');
-      setExistingLoans('');
-      setLoanRequirement('');
-      setTypeOfLoan('Personal Loan');
-      setOtherLoanType('');
-      setRemarks('');
-      setFollowUpRequired('Yes');
-      setLocation('');
+      setRmName("");
+      setCustomerFullName("");
+      setEmail("");
+      setPhoneNumber("");
+      setTypeOfIncome("Business");
+      setBusiness("");
+      setIncome("");
+      setExistingLoans("");
+      setLoanRequirement("");
+      setTypeOfLoan("Personal Loan");
+      setOtherLoanType("");
+      setRemarks("");
+      setFollowUpRequired("Yes");
+      setLocation("");
     } catch (error: any) {
-      console.error('Network Error:', error);
-      Alert.alert('Error', error.message || 'Unable to submit form');
+      console.error("Network Error:", error);
+      Alert.alert("Error", error.message || "Unable to submit form");
     }
   };
 
@@ -142,13 +148,13 @@ export default function FormScreen() {
       <MotiView
         from={{ opacity: 0, translateY: -20 }}
         animate={{ opacity: 1, translateY: 0 }}
-        transition={{ type: 'timing', duration: 1000 }}
+        transition={{ type: "timing", duration: 1000 }}
         style={styles.container}
       >
         <MotiText
           from={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: 'timing', duration: 1000 }}
+          transition={{ type: "timing", duration: 1000 }}
           style={styles.heading}
         >
           Business Form
@@ -210,10 +216,14 @@ export default function FormScreen() {
         <View style={styles.radioContainer}>
           <TouchableOpacity
             style={styles.radioButton}
-            onPress={() => setTypeOfIncome('Business')}
+            onPress={() => setTypeOfIncome("Business")}
           >
             <Ionicons
-              name={typeOfIncome === 'Business' ? 'radio-button-on' : 'radio-button-off'}
+              name={
+                typeOfIncome === "Business"
+                  ? "radio-button-on"
+                  : "radio-button-off"
+              }
               size={20}
               color="#1E90FF"
             />
@@ -221,10 +231,14 @@ export default function FormScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.radioButton}
-            onPress={() => setTypeOfIncome('Employee')}
+            onPress={() => setTypeOfIncome("Employee")}
           >
             <Ionicons
-              name={typeOfIncome === 'Employee' ? 'radio-button-on' : 'radio-button-off'}
+              name={
+                typeOfIncome === "Employee"
+                  ? "radio-button-on"
+                  : "radio-button-off"
+              }
               size={20}
               color="#1E90FF"
             />
@@ -233,7 +247,7 @@ export default function FormScreen() {
         </View>
 
         {/* Business */}
-        {typeOfIncome === 'Business' && (
+        {typeOfIncome === "Business" && (
           <View style={styles.inputContainer}>
             <Ionicons name="briefcase-outline" size={20} color="#1E90FF" />
             <TextInput
@@ -302,7 +316,7 @@ export default function FormScreen() {
         </View>
 
         {/* Specify Other Loan Type */}
-        {typeOfLoan === 'Other' && (
+        {typeOfLoan === "Other" && (
           <View style={styles.inputContainer}>
             <Ionicons name="create-outline" size={20} color="#1E90FF" />
             <TextInput
@@ -317,7 +331,11 @@ export default function FormScreen() {
 
         {/* Remarks */}
         <View style={styles.inputContainer}>
-          <Ionicons name="chatbubble-ellipses-outline" size={20} color="#1E90FF" />
+          <Ionicons
+            name="chatbubble-ellipses-outline"
+            size={20}
+            color="#1E90FF"
+          />
           <TextInput
             style={styles.input}
             placeholder="Remarks"
@@ -332,10 +350,14 @@ export default function FormScreen() {
         <View style={styles.radioContainer}>
           <TouchableOpacity
             style={styles.radioButton}
-            onPress={() => setFollowUpRequired('Yes')}
+            onPress={() => setFollowUpRequired("Yes")}
           >
             <Ionicons
-              name={followUpRequired === 'Yes' ? 'radio-button-on' : 'radio-button-off'}
+              name={
+                followUpRequired === "Yes"
+                  ? "radio-button-on"
+                  : "radio-button-off"
+              }
               size={20}
               color="#1E90FF"
             />
@@ -343,10 +365,14 @@ export default function FormScreen() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.radioButton}
-            onPress={() => setFollowUpRequired('No')}
+            onPress={() => setFollowUpRequired("No")}
           >
             <Ionicons
-              name={followUpRequired === 'No' ? 'radio-button-on' : 'radio-button-off'}
+              name={
+                followUpRequired === "No"
+                  ? "radio-button-on"
+                  : "radio-button-off"
+              }
               size={20}
               color="#1E90FF"
             />
@@ -364,7 +390,10 @@ export default function FormScreen() {
             value={location}
             onChangeText={setLocation}
           />
-          <TouchableOpacity style={styles.locationButton} onPress={fetchLocation}>
+          <TouchableOpacity
+            style={styles.locationButton}
+            onPress={fetchLocation}
+          >
             <Ionicons name="locate-outline" size={24} color="#1E90FF" />
           </TouchableOpacity>
         </View>
@@ -374,7 +403,7 @@ export default function FormScreen() {
           <MotiText
             from={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: 'timing', duration: 500 }}
+            transition={{ type: "timing", duration: 500 }}
             style={styles.buttonText}
           >
             Submit
@@ -389,72 +418,72 @@ export default function FormScreen() {
 const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: 'center',
-    backgroundColor: '#121212',
+    justifyContent: "center",
+    backgroundColor: "#121212",
   },
   container: {
-    alignItems: 'center',
+    alignItems: "center",
     padding: 20,
-    backgroundColor: '#121212',
+    backgroundColor: "#121212",
   },
   heading: {
     fontSize: 28,
     marginBottom: 30,
-    textAlign: 'center',
-    color: '#1E90FF',
-    fontWeight: 'bold',
+    textAlign: "center",
+    color: "#1E90FF",
+    fontWeight: "bold",
   },
   label: {
-    color: '#fff',
-    alignSelf: 'flex-start',
+    color: "#fff",
+    alignSelf: "flex-start",
     marginBottom: 5,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#333',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#333",
     borderRadius: 8,
     paddingHorizontal: 10,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#1E90FF',
+    borderColor: "#1E90FF",
     width: 330,
   },
   input: {
     flex: 1,
     height: 40,
-    color: '#fff',
+    color: "#fff",
     marginLeft: 10,
   },
   radioContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 20,
   },
   radioButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginRight: 20,
   },
   radioText: {
-    color: '#fff',
+    color: "#fff",
     marginLeft: 5,
   },
   pickerContainer: {
-    backgroundColor: '#333',
+    backgroundColor: "#333",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#1E90FF',
+    borderColor: "#1E90FF",
     marginBottom: 20,
-    overflow: 'hidden',
+    overflow: "hidden",
     width: 330,
   },
   picker: {
-    color: '#fff',
+    color: "#fff",
     height: 50,
-    width: '100%',
+    width: "100%",
   },
   locationButton: {
     marginLeft: 10,
@@ -463,18 +492,18 @@ const styles = StyleSheet.create({
     marginTop: 30,
     paddingVertical: 15,
     borderRadius: 8,
-    backgroundColor: '#1E90FF',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "#1E90FF",
+    justifyContent: "center",
+    alignItems: "center",
     width: 330,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowRadius: 5,
     shadowOffset: { width: 0, height: 2 },
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
