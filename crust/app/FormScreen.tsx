@@ -48,10 +48,7 @@ export default function FormScreen() {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        Alert.alert(
-          "Permission Denied",
-          "Permission to access location was denied"
-        );
+        Alert.alert("Permission Denied", "Permission to access location was denied");
         return;
       }
 
@@ -88,10 +85,7 @@ export default function FormScreen() {
     }
 
     if (!validatePhoneNumber(phoneNumber)) {
-      Alert.alert(
-        "Invalid Phone Number",
-        "Please enter a valid 10-digit phone number."
-      );
+      Alert.alert("Invalid Phone Number", "Please enter a valid 10-digit phone number.");
       return;
     }
 
@@ -103,9 +97,9 @@ export default function FormScreen() {
       phoneNumber,
       typeOfIncome,
       business: businessName || "",
-      income: businessTurnover || "",
+      income: parseFloat(businessTurnover) || 0, // Ensure this is a number
       existingLoans,
-      loanRequirement,
+      loanRequirement: parseFloat(loanRequirement) || 0, // Ensure this is a number
       typeOfLoan: typeOfLoan === "Other" ? otherLoanType : typeOfLoan,
       remarks,
       followUpRequired,
@@ -217,11 +211,7 @@ export default function FormScreen() {
             onPress={() => setTypeOfIncome("Business")}
           >
             <Ionicons
-              name={
-                typeOfIncome === "Business"
-                  ? "radio-button-on"
-                  : "radio-button-off"
-              }
+              name={typeOfIncome === "Business" ? "radio-button-on" : "radio-button-off"}
               size={20}
               color="#1E90FF"
             />
@@ -232,11 +222,7 @@ export default function FormScreen() {
             onPress={() => setTypeOfIncome("Employee")}
           >
             <Ionicons
-              name={
-                typeOfIncome === "Employee"
-                  ? "radio-button-on"
-                  : "radio-button-off"
-              }
+              name={typeOfIncome === "Employee" ? "radio-button-on" : "radio-button-off"}
               size={20}
               color="#1E90FF"
             />
@@ -343,11 +329,7 @@ export default function FormScreen() {
 
         {/* Remarks */}
         <View style={styles.inputContainer}>
-          <Ionicons
-            name="chatbubble-ellipses-outline"
-            size={20}
-            color="#1E90FF"
-          />
+          <Ionicons name="chatbubble-ellipses-outline" size={20} color="#1E90FF" />
           <TextInput
             style={styles.input}
             placeholder="Remarks"
@@ -365,11 +347,7 @@ export default function FormScreen() {
             onPress={() => setFollowUpRequired("Yes")}
           >
             <Ionicons
-              name={
-                followUpRequired === "Yes"
-                  ? "radio-button-on"
-                  : "radio-button-off"
-              }
+              name={followUpRequired === "Yes" ? "radio-button-on" : "radio-button-off"}
               size={20}
               color="#1E90FF"
             />
@@ -380,11 +358,7 @@ export default function FormScreen() {
             onPress={() => setFollowUpRequired("No")}
           >
             <Ionicons
-              name={
-                followUpRequired === "No"
-                  ? "radio-button-on"
-                  : "radio-button-off"
-              }
+              name={followUpRequired === "No" ? "radio-button-on" : "radio-button-off"}
               size={20}
               color="#1E90FF"
             />

@@ -1,4 +1,3 @@
-// models/Form.js
 const mongoose = require('mongoose');
 
 // Define the schema for form submissions
@@ -10,7 +9,7 @@ const formSchema = new mongoose.Schema(
     phoneNumber: { type: String, required: true },
     typeOfIncome: { type: String, required: true },
     business: { type: String },
-    income: { type: Number },
+    income: { type: Number }, // Ensure this is a number
     existingLoans: { type: String },
     loanRequirement: { type: Number },
     typeOfLoan: { type: String, required: true },
@@ -18,8 +17,7 @@ const formSchema = new mongoose.Schema(
     remarks: { type: String },
     followUpRequired: { type: String, required: true },
     location: { type: String, required: true },
-    // Remove the uploadedDocument field
-    // uploadedDocument: { type: String }, // Stores the filename or path
+    unit: { type: String, required: true }, // Ensure the unit field is defined
   },
   { timestamps: true }
 );

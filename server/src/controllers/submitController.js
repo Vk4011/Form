@@ -8,7 +8,7 @@ const submitForm = async (req, res) => {
     phoneNumber,
     typeOfIncome,
     business,
-    income, // Change 'Income' to 'income' (case sensitivity)
+    income,
     existingLoans,
     loanRequirement,
     typeOfLoan,
@@ -16,7 +16,7 @@ const submitForm = async (req, res) => {
     remarks,
     followUpRequired,
     location,
-    unit, // Add unit to destructured body
+    unit, // Make sure unit is correctly destructured
   } = req.body;
 
   // Basic validation to check if required fields are present
