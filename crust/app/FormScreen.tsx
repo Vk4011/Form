@@ -1,5 +1,3 @@
-// FormScreen.tsx
-
 import React, { useState } from "react";
 import {
   Text,
@@ -13,7 +11,7 @@ import {
 import { MotiView, MotiText } from "moti";
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
-import { submitFormData } from "./api"; // Corrected import statement
+import { submitFormData } from "./api"; // Ensure this import matches your file structure
 import { Picker } from "@react-native-picker/picker";
 
 export default function FormScreen() {
@@ -32,6 +30,7 @@ export default function FormScreen() {
   const [remarks, setRemarks] = useState("");
   const [followUpRequired, setFollowUpRequired] = useState("Yes");
   const [location, setLocation] = useState("");
+  const [unit, setUnit] = useState("Lakhs"); // New state for unit selection
 
   // Validation Functions
   const validateEmail = (email: string) => {
@@ -103,22 +102,20 @@ export default function FormScreen() {
       email,
       phoneNumber,
       typeOfIncome,
-      business,
-      income,
+      business: businessName || "",
+      income: businessTurnover || "",
       existingLoans,
       loanRequirement,
       typeOfLoan: typeOfLoan === "Other" ? otherLoanType : typeOfLoan,
       remarks,
       followUpRequired,
       location,
+      unit, // Add selected unit to form data
     };
 
     // Submit Form Data
     try {
-      // For debugging purposes, log individual form data
       console.log("Submitting form data...");
-      console.log("Form Data:", formData);
-
       const data = await submitFormData(formData);
       Alert.alert("Success", "Form submitted successfully");
 
@@ -128,8 +125,8 @@ export default function FormScreen() {
       setEmail("");
       setPhoneNumber("");
       setTypeOfIncome("Business");
-      setBusiness("");
-      setIncome("");
+      setBusinessName("");
+      setBusinessTurnover("");
       setExistingLoans("");
       setLoanRequirement("");
       setTypeOfLoan("Personal Loan");
@@ -137,6 +134,7 @@ export default function FormScreen() {
       setRemarks("");
       setFollowUpRequired("Yes");
       setLocation("");
+      setUnit("Lakhs"); // Reset unit selection
     } catch (error: any) {
       console.error("Network Error:", error);
       Alert.alert("Error", error.message || "Unable to submit form");
@@ -271,6 +269,20 @@ export default function FormScreen() {
             onChangeText={setBusinessTurnover}
             keyboardType="numeric"
           />
+        </View>
+
+        {/* Unit Selection */}
+        <Text style={styles.label}>Select Unit:</Text>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={unit}
+            style={styles.picker}
+            onValueChange={(itemValue) => setUnit(itemValue)}
+            dropdownIconColor="#1E90FF"
+          >
+            <Picker.Item label="Lakhs" value="Lakhs" />
+            <Picker.Item label="Crores" value="Crores" />
+          </Picker>
         </View>
 
         {/* Existing Loans */}

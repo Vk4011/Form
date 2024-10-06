@@ -1,4 +1,3 @@
-// controllers/getFormDataController.js
 const Form = require('../models/Form');
 
 // Controller to handle fetching form data and sending it in HTML format
@@ -70,10 +69,11 @@ const getFormData = async (req, res) => {
               <th>Income</th>
               <th>Existing Loans</th>
               <th>Loan Requirement</th>
+              <th>Location</th> <!-- Moved Location column here -->
+              <th>Unit</th> <!-- Added unit column -->
               <th>Type of Loan</th>
               <th>Remarks</th>
               <th>Follow-up Required</th>
-              <th>Location</th>
             </tr>
           </thead>
           <tbody>
@@ -88,14 +88,15 @@ const getFormData = async (req, res) => {
           <td>${form.email}</td>
           <td>${form.phoneNumber}</td>
           <td>${form.typeOfIncome}</td>
-          <td>${form.businessName || ''}</td>
-          <td>${form.businessTurnover || ''}</td>
+          <td>${form.business || ''}</td> <!-- Fixed reference to business -->
+          <td>${form.income || ''}</td> <!-- Fixed reference to income -->
           <td>${form.existingLoans || ''}</td>
           <td>${form.loanRequirement || ''}</td>
+          <td>${form.location || ''}</td> <!-- Added location -->
+          <td>${form.unit || ''}</td> <!-- Added unit -->
           <td>${form.typeOfLoan}</td>
           <td>${form.remarks || ''}</td>
           <td>${form.followUpRequired}</td>
-          <td>${form.location}</td>
         </tr>`;
     });
 

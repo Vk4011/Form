@@ -1,14 +1,4 @@
-// controllers/submitController.js
 const Form = require('../models/Form');
-
-// Remove multer imports and configuration
-// const multer = require('multer');
-// const path = require('path');
-
-// Remove multer configuration
-// const storage = multer.diskStorage({...});
-// const fileFilter = (req, file, cb) => {...};
-// const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 const submitForm = async (req, res) => {
   const {
@@ -18,7 +8,7 @@ const submitForm = async (req, res) => {
     phoneNumber,
     typeOfIncome,
     business,
-    Income,
+    income, // Change 'Income' to 'income' (case sensitivity)
     existingLoans,
     loanRequirement,
     typeOfLoan,
@@ -26,6 +16,7 @@ const submitForm = async (req, res) => {
     remarks,
     followUpRequired,
     location,
+    unit, // Add unit to destructured body
   } = req.body;
 
   // Basic validation to check if required fields are present
@@ -37,7 +28,8 @@ const submitForm = async (req, res) => {
     !typeOfIncome ||
     !typeOfLoan ||
     !followUpRequired ||
-    !location
+    !location ||
+    !unit // Validate the unit field
   ) {
     return res.status(400).json({ error: 'Required fields are missing' });
   }
@@ -51,7 +43,7 @@ const submitForm = async (req, res) => {
       phoneNumber,
       typeOfIncome,
       business: business || null,
-     Income:Income || null,
+      income: income || null,
       existingLoans: existingLoans || null,
       loanRequirement: loanRequirement || null,
       typeOfLoan: typeOfLoan === 'Other' ? otherLoanType : typeOfLoan,
@@ -59,8 +51,7 @@ const submitForm = async (req, res) => {
       remarks: remarks || null,
       followUpRequired,
       location,
-      // Remove the uploadedDocument field
-      // uploadedDocument: req.file ? req.file.filename : null,
+      unit, // Include the unit field
     });
 
     await newForm.save();
@@ -71,7 +62,5 @@ const submitForm = async (req, res) => {
 };
 
 module.exports = {
-  // Remove the export of upload middleware
-  // upload,
   submitForm,
 };

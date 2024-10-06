@@ -1,7 +1,6 @@
-// api.tsx
 export const submitFormData = async (formData: any) => {
   try {
-    const response = await fetch('https://crust-33g3.onrender.com/api/submit-form', {
+    const response = await fetch('http://192.168.30.79:8080/api/submit-form', { // Use your local IP address
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -15,7 +14,6 @@ export const submitFormData = async (formData: any) => {
     }
 
     const data = await response.json();
-
     return data;
   } catch (error: any) {
     console.error('Error in submitFormData:', error);
