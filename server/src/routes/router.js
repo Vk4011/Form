@@ -1,6 +1,6 @@
 // routes/router.js
 const express = require('express');
-const { submitForm } = require('../controllers/submitController');
+const { submitForm ,getFormsByCustomerStatus } = require('../controllers/submitController');
 const { getFormData } = require('../controllers/getFormDataController');
 const { clearDatabase } = require('../controllers/clearDatabaseController');
 const { getData } = require('../controllers/getData');
@@ -10,6 +10,7 @@ router.post('/submit-form', submitForm);
 router.get('/data', getFormData);
 router.get('/clear', clearDatabase); 
 router.get("/getdata",getData) ;
+router.get('/by-status', getFormsByCustomerStatus);
 
 module.exports = router;
 

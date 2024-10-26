@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const db = require('./config/db');
 const dotenv = require('dotenv');
 dotenv.config();
+const databaseRoutes = require('./routes/databaase');
 
 const routes = require('./routes/router');
 
@@ -27,6 +28,9 @@ app.use('/api', routes);
 app.get('/', (req, res) => {
   res.json({ msg: 'Welcome to the form submission API' });
 });
+app.use('/db/v1', databaseRoutes);
+
+
 
 app.listen(port, () => {
   console.log(`\n\t Server running on http://localhost:${port} \n`);

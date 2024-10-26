@@ -17,6 +17,7 @@ import { Picker } from "@react-native-picker/picker";
 export default function FormScreen() {
   // State Variables
   const [rmName, setRmName] = useState("");
+  const [customerStatus, setCustomerStatus] = useState("visited interested");
   const [customerFullName, setCustomerFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -30,16 +31,16 @@ export default function FormScreen() {
   const [remarks, setRemarks] = useState("");
   const [followUpRequired, setFollowUpRequired] = useState("Yes");
   const [location, setLocation] = useState("");
-  const [unit, setUnit] = useState("Lakhs"); // New state for unit selection
+  const [unit, setUnit] = useState("Lakhs");
 
   // Validation Functions
-  const validateEmail = (email: string) => {
+  const validateEmail = (email) => {
     const emailRegex = /\S+@\S+\.\S+/;
     return emailRegex.test(email);
   };
 
-  const validatePhoneNumber = (phone: string) => {
-    const phoneRegex = /^\d{10}$/; // Adjust based on your requirements
+  const validatePhoneNumber = (phone) => {
+    const phoneRegex = /^\d{10}$/;
     return phoneRegex.test(phone);
   };
 
@@ -64,14 +65,26 @@ export default function FormScreen() {
 
   // Handle Form Submission
   const handleSubmit = async () => {
+    // Log required fields
+    console.log("Required fields:", {
+      rmName,
+      customerStatus,
+      customerFullName,
+      phoneNumber,
+      typeOfIncome,
+      remarks,
+      followUpRequired,
+      location,
+    });
+
     // Validations
     if (
       !rmName ||
+      !customerStatus ||
       !customerFullName ||
-      !email ||
       !phoneNumber ||
       !typeOfIncome ||
-      !typeOfLoan ||
+      !remarks ||
       !followUpRequired ||
       !location
     ) {
@@ -79,7 +92,8 @@ export default function FormScreen() {
       return;
     }
 
-    if (!validateEmail(email)) {
+    // Validate email if it's provided
+    if (email && !validateEmail(email)) {
       Alert.alert("Invalid Email", "Please enter a valid email address.");
       return;
     }
@@ -89,32 +103,34 @@ export default function FormScreen() {
       return;
     }
 
-    // Construct a plain JavaScript object
     const formData = {
       rmName,
+      customerStatus,
       customerFullName,
       email,
       phoneNumber,
       typeOfIncome,
       business: businessName || "",
-      income: parseFloat(businessTurnover) || 0, // Ensure this is a number
+      income: parseFloat(businessTurnover) || 0,
       existingLoans,
-      loanRequirement: parseFloat(loanRequirement) || 0, // Ensure this is a number
+      loanRequirement: parseFloat(loanRequirement) || 0,
       typeOfLoan: typeOfLoan === "Other" ? otherLoanType : typeOfLoan,
       remarks,
       followUpRequired,
       location,
-      unit, // Add selected unit to form data
+      unit,
     };
 
-    // Submit Form Data
+    console.log("Submitting formData:", formData); // For debugging
+
     try {
       console.log("Submitting form data...");
       const data = await submitFormData(formData);
       Alert.alert("Success", "Form submitted successfully");
 
-      // Reset form fields after submission
+      // Reset form fields
       setRmName("");
+      setCustomerStatus("visited interested");
       setCustomerFullName("");
       setEmail("");
       setPhoneNumber("");
@@ -128,8 +144,8 @@ export default function FormScreen() {
       setRemarks("");
       setFollowUpRequired("Yes");
       setLocation("");
-      setUnit("Lakhs"); // Reset unit selection
-    } catch (error: any) {
+      setUnit("Lakhs");
+    } catch (error) {
       console.error("Network Error:", error);
       Alert.alert("Error", error.message || "Unable to submit form");
     }
@@ -157,11 +173,26 @@ export default function FormScreen() {
           <Ionicons name="person-outline" size={20} color="#1E90FF" />
           <TextInput
             style={styles.input}
-            placeholder="RM Name"
+            placeholder="RM Name (required)"
             placeholderTextColor="#999"
             value={rmName}
             onChangeText={setRmName}
           />
+        </View>
+
+        {/* Customer Status Dropdown */}
+        <Text style={styles.label}>Customer Status (required):</Text>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={customerStatus}
+            style={styles.picker}
+            onValueChange={(itemValue) => setCustomerStatus(itemValue)}
+            dropdownIconColor="#1E90FF"
+          >
+            <Picker.Item label="Visited Interested" value="visited interested" />
+            <Picker.Item label="Visited Not Interested" value="visited not interested" />
+            <Picker.Item label="Visited Not Available" value="visited not available" />
+          </Picker>
         </View>
 
         {/* Full Name of Customer */}
@@ -169,7 +200,7 @@ export default function FormScreen() {
           <Ionicons name="person-outline" size={20} color="#1E90FF" />
           <TextInput
             style={styles.input}
-            placeholder="Full Name of Customer"
+            placeholder="Full Name of Customer (required)"
             placeholderTextColor="#999"
             value={customerFullName}
             onChangeText={setCustomerFullName}
@@ -195,7 +226,7 @@ export default function FormScreen() {
           <Ionicons name="call-outline" size={20} color="#1E90FF" />
           <TextInput
             style={styles.input}
-            placeholder="Phone Number"
+            placeholder="Phone Number (required)"
             placeholderTextColor="#999"
             value={phoneNumber}
             onChangeText={setPhoneNumber}
@@ -204,7 +235,7 @@ export default function FormScreen() {
         </View>
 
         {/* Type of Income */}
-        <Text style={styles.label}>Type of Income:</Text>
+        <Text style={styles.label}>Type of Income (required):</Text>
         <View style={styles.radioContainer}>
           <TouchableOpacity
             style={styles.radioButton}
@@ -332,7 +363,7 @@ export default function FormScreen() {
           <Ionicons name="chatbubble-ellipses-outline" size={20} color="#1E90FF" />
           <TextInput
             style={styles.input}
-            placeholder="Remarks"
+            placeholder="Remarks (required)"
             placeholderTextColor="#999"
             value={remarks}
             onChangeText={setRemarks}
@@ -340,7 +371,7 @@ export default function FormScreen() {
         </View>
 
         {/* Follow-up Required */}
-        <Text style={styles.label}>Follow-up Required:</Text>
+        <Text style={styles.label}>Follow-up Required (required):</Text>
         <View style={styles.radioContainer}>
           <TouchableOpacity
             style={styles.radioButton}
@@ -371,15 +402,12 @@ export default function FormScreen() {
           <Ionicons name="location-outline" size={20} color="#1E90FF" />
           <TextInput
             style={styles.input}
-            placeholder="Location"
+            placeholder="Location (required)"
             placeholderTextColor="#999"
             value={location}
             onChangeText={setLocation}
           />
-          <TouchableOpacity
-            style={styles.locationButton}
-            onPress={fetchLocation}
-          >
+          <TouchableOpacity style={styles.locationButton} onPress={fetchLocation}>
             <Ionicons name="locate-outline" size={24} color="#1E90FF" />
           </TouchableOpacity>
         </View>
@@ -399,6 +427,8 @@ export default function FormScreen() {
     </ScrollView>
   );
 }
+
+// Styles remain the same...
 
 // Styles
 const styles = StyleSheet.create({

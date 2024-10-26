@@ -1,8 +1,10 @@
+// controllers/formController.js
 const Form = require('../models/Form');
 
 const submitForm = async (req, res) => {
   const {
     rmName,
+    customerStatus, // New field
     customerFullName,
     email,
     phoneNumber,
@@ -16,12 +18,13 @@ const submitForm = async (req, res) => {
     remarks,
     followUpRequired,
     location,
-    unit, // Make sure unit is correctly destructured
+    unit,
   } = req.body;
 
   // Basic validation to check if required fields are present
   if (
     !rmName ||
+    !customerStatus || // Include in validation
     !customerFullName ||
     !email ||
     !phoneNumber ||
@@ -29,15 +32,22 @@ const submitForm = async (req, res) => {
     !typeOfLoan ||
     !followUpRequired ||
     !location ||
-    !unit // Validate the unit field
+    !unit
   ) {
     return res.status(400).json({ error: 'Required fields are missing' });
+  }
+
+  // Validate customer status value
+  const validCustomerStatuses = ['visited interested', 'visited not interested', 'visited not available'];
+  if (!validCustomerStatuses.includes(customerStatus)) {
+    return res.status(400).json({ error: 'Invalid customer status value' });
   }
 
   try {
     // Save the form data to the database
     const newForm = new Form({
       rmName,
+      customerStatus, // Include in form data
       customerFullName,
       email,
       phoneNumber,
@@ -51,7 +61,7 @@ const submitForm = async (req, res) => {
       remarks: remarks || null,
       followUpRequired,
       location,
-      unit, // Include the unit field
+      unit,
     });
 
     await newForm.save();
@@ -61,6 +71,24 @@ const submitForm = async (req, res) => {
   }
 };
 
+// Add a new function to get forms by customer status
+const getFormsByCustomerStatus = async (req, res) => {
+  const { status } = req.query;
+  
+  try {
+    let query = {};
+    if (status) {
+      query.customerStatus = status;
+    }
+    
+    const forms = await Form.find(query).sort({ createdAt: -1 });
+    res.status(200).json({ forms });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching forms', details: error.message });
+  }
+};
+
 module.exports = {
   submitForm,
+  getFormsByCustomerStatus,
 };
